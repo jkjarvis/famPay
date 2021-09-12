@@ -1,29 +1,48 @@
 version: '3'
  
 services:
-  app:
-    build:
-      context: .
+  web: &web
+    build: .
+    command: bash -c "cd famPay && python manage.py migrate --run-syncdb && python manage.py runserver 0.0.0.0:8000"
     ports:
-      - "8000:8000"
+      - 8000:8000
+    depends_on:
+      - redis
     volumes:
-      - ./app:/app
-    command: >
-      sh -c "python3 manage.py migrate &&
-             python3 manage.py wait_for_db &&
-             python3 manage.py runserver 127.0.0.1:8000"
+      - .:/code
+
+  
+  celery_worker:
+    <<: *web
+    restart: always
+    depends_on:
+      - web
+      - redis
+    command: bash -c "cd famPay && celery -A famPay worker -l info"
+    ports: []
+    volumes:
+      - .:/code
+
+  
+  celery-beat:
+    <<: *web
+    command: bash -c "cd famPay && celery -A famPay beat -l info"
+    volumes:
+      - .:/code
+    depends_on:
+      - web
+      - redis
+    ports: []
+
     
-    redis:
-      image: redis:alpine
-    celery:
-      restart: always
-      build:
-        context: .
-      command: >
-        sh -c "celery -A famPay worker -l info &&
-               celery -A famPay beat "
-      volumes:
-        - ./app:/app
-      depends_on:
-        - redis
-        - app
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - .:/code
+
+
+
+
+    

@@ -19,10 +19,14 @@ logger = get_task_logger(__name__)
 
 @app.task
 def upload():
-    url = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=100&q=cricket&key=AIzaSyB5Kr212duSycZJWM-zXg5A_7tDV-CquIg"
+    url = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=100&q=cricket&key=AIzaSyC3uLT_FRcBZj0UKpOAb94VhSE1XFGfPj8"
 
     response = requests.get(url)
     print(response)
+    
+    if response.status_code != 200:
+        print(response.json())
+        return
     response = response.json()["items"]
     for i in response:
         response = i["snippet"]
