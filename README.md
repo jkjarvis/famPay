@@ -21,6 +21,9 @@
       7.Wait for the dependencies to download. -->
 
 ## 4. Running the project
+      1. Run : `docker-compose build`
+      2. Run : `docker-compose -f docker-compose.yml up -d`
+      
 <!--       1. Make sure you are in `fp/fampay/famPay` directory.
       2. Run : `python manage.py runserver`
       3. Open 'http://127.0.0.1:8000' in chrome or firefox.
