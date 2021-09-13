@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
  
 services:
   web: &web
@@ -6,10 +6,8 @@ services:
     command: bash -c "cd famPay && python manage.py migrate --run-syncdb && python manage.py runserver 0.0.0.0:8000"
     ports:
       - 8000:8000
-    depends_on:
-      - redis
     volumes:
-      - .:/code
+      - .:/app
 
   
   celery_worker:
@@ -21,26 +19,25 @@ services:
     command: bash -c "cd famPay && celery -A famPay worker -l info"
     ports: []
     volumes:
-      - .:/code
+      - . :/app
 
   
   celery-beat:
     <<: *web
     command: bash -c "cd famPay && celery -A famPay beat -l info"
-    volumes:
-      - .:/code
     depends_on:
       - web
       - redis
     ports: []
+    volumes:
+      - . :/app
 
     
   redis:
     image: redis:alpine
     ports:
       - 6379:6379
-    volumes:
-      - .:/code
+
 
 
 
