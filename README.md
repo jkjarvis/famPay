@@ -30,7 +30,7 @@
       4. You should see the default rest api homepage. -->
 
 ## 5. Listing the stored videos
-      1. While the server is running, go to `http://127.0.0.1/video' in chrome or firefox
+      1. After 4th step above , go to `http://127.0.0.1/video' in chrome or firefox
       2. This should list all the videos stored till now. Keep refreshing after few seconds and see if the results get refreshed (depends upon if a new video is uploaded to 'cricket' query).
 
 ## 6. Searching a video with a keyword
